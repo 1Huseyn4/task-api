@@ -18,8 +18,6 @@ async def validation_exception_handler(
     )
 
 
-
-
 tasks = [
     {"id": 1, "title": "Learn Python", "done": False},
     {"id": 2, "title": "Learn FastAPI", "done": False},
@@ -36,7 +34,10 @@ class TaskUpdate(BaseModel):
     done: bool | None = None
 
 
-@app.get("/")
+@app.get(
+    "/",
+    description="Get basic information about the Task API"
+)
 def read_root():
     return {
         "name": "Task API",
@@ -45,19 +46,28 @@ def read_root():
     }
 
 
-@app.get("/health")
+@app.get(
+    "/health",
+    description="Check if the API is running"
+)
 def health_check():
     return {
         "status": "ok"
     }
 
 
-@app.get("/tasks")
+@app.get(
+    "/tasks",
+    description="Get all tasks"
+)
 def get_tasks():
     return tasks
 
 
-@app.get("/tasks/{task_id}")
+@app.get(
+    "/tasks/{task_id}",
+    description="Get a single task by ID"
+)
 def get_task(task_id: int):
     for task in tasks:
         if task["id"] == task_id:
@@ -69,7 +79,11 @@ def get_task(task_id: int):
     )
 
 
-@app.post("/tasks", status_code=201)
+@app.post(
+    "/tasks",
+    status_code=201,
+    description="Create a new task"
+)
 def create_task(task: TaskCreate):
     new_id = max([t["id"] for t in tasks], default=0) + 1
 
@@ -83,7 +97,11 @@ def create_task(task: TaskCreate):
 
     return new_task
 
-@app.put("/tasks/{task_id}")
+
+@app.put(
+    "/tasks/{task_id}",
+    description="Update an existing task"
+)
 def update_task(task_id: int, task_update: TaskUpdate):
     for task in tasks:
         if task["id"] == task_id:
@@ -107,7 +125,11 @@ def update_task(task_id: int, task_update: TaskUpdate):
     )
 
 
-@app.delete("/tasks/{task_id}", status_code=204)
+@app.delete(
+    "/tasks/{task_id}",
+    status_code=204,
+    description="Delete a task by ID"
+)
 def delete_task(task_id: int):
     for task in tasks:
         if task["id"] == task_id:
